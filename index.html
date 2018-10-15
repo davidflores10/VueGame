@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monster Slayer</title>
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="css/foundation.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+    <section class="row">
+        <div class="small-6 columns">
+            <h1 class="text-center">YOU</h1>
+            <div class="healthbar">
+                <div class="healthbar text-center" :style="styleHealthBar">
+                    {{playerHealth}}
+                </div>
+            </div>
+        </div>
+        <div class="small-6 columns">
+            <h1 class="text-center">MONSTER</h1>
+            <div class="healthbar">
+                <div class="healthbar text-center" :style="styleMonsterHealthBar">
+                    {{monsterHealth}}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="row controls">
+        <div class="small-12 columns">
+            <button id="start-game" @click="start_new_game" v-if="startGame==false">START NEW GAME</button>
+        </div>
+    </section>
+    <section class="row controls">
+        <div class="small-12 columns" v-if="startGame">
+            <button id="attack" @click="playerAttack">ATTACK</button>
+            <button id="special-attack" @click="specialPlayerAttack">SPECIAL ATTACK</button>
+            <button id="heal" @click="heal">HEAL</button>
+            <button id="give-up" @click="give_up">GIVE UP</button>
+        </div>
+    </section>
+    <section class="row log" v-if="messages.length>0">
+        <div class="small-12 columns">
+            <ul>
+                <li v-for="p in messages" :class="{'player-turn': p.isPlayer , 'monster-turn': !p.isPlayer}">
+                    {{p.text}} 
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+</body>
+
+<script type="text/javascript">
+new Vue({
+  el: '#app',
+  data: {
+    messages:[],
+    playerHealth:100,
+    monsterHealth:100,
+    playerWin:false,
+    startGame:false,
+    playerTurn:{
+        text:"",
+        isPlayer:false
+    }
+  
+    },
+
+    computed:{
+
+        styleHealthBar:function(){
+            return{
+                backgroundColor: 'green',
+                margin: 0,
+                color: 'white',
+                width: this.playerHealth + '%'
+            }
+            
+        },
+
+        styleMonsterHealthBar:function(){
+            return{
+                backgroundColor: 'green',
+                margin: 0,
+                color: 'white',
+                width: this.monsterHealth + '%'
+            }
+            
+        },
+
+
+    },
+
+    watch:{
+
+        monsterHealth:function(value){
+            var vm=this;   
+            if(value<=0 && vm.playerWin==false){
+                alert('Player wins!!!');
+                vm.playerWin=true;
+                vm.startGame=false;
+            }
+            
+        },
+
+        playerHealth:function(value){
+            var vm=this;
+
+            if(value<=0 && vm.playerWin==false){
+                alert('Player fails!!!');
+                vm.playerWin=true;
+                vm.startGame=false;
+            }
+
+
+        }
+    },
+
+    methods:{
+
+        playerAttack: function(){
+
+            if(!this.playerWin){
+                this.messages.unshift({
+                    isPlayer: true,
+                    text:'PLAYER hits the MONSTER'});
+                    monsterHealth= this.monsterHealth-7;
+                this.monsterAttack();    
+            }
+            
+        },
+
+
+        specialPlayerAttack: function(){
+
+            if(!this.playerWin){
+                this.playerTurn=true;
+                this.messages.unshift({
+                    isPlayer: true,
+                    text:'PLAYER makes special attack to the MONSTER!'});
+                    monsterHealth= this.monsterHe
+                this.monsterHealth= this.monsterHealth-11;
+                this.monsterAttack();
+            }
+            
+
+
+        },
+
+        heal: function(){
+
+            
+            if(!this.playerWin){
+
+                if(this.playerHealth<100){
+
+               
+
+                this.messages.unshift({
+                    isPlayer: true,
+                    text:'Player heal himself by 10'});
+
+                if (this.playerHealth+10 >100) {
+                    this.playerHealth=100
+
+
+                }else{
+                    this.playerHealth=this.playerHealth+10;    
+                }
+        
+                
+                this.monsterAttack();
+
+                }else{
+                    alert('The player has all of his health!!');
+                }
+            }
+           
+            
+        },
+
+        monsterAttack:function(){
+
+
+            
+            attack=Math.round((Math.random() * 8));
+
+            if(attack>0){
+
+
+                this.messages.unshift({
+                    isPlayer: false,
+                    text:'The MONSTER hit the player with ' + attack + ' hitpoints'});  
+                this.playerHealth= this.playerHealth-attack;  
+                
+
+            }else{
+                this.playerTurn=false;
+                this.messages.unshift('The MONSTER miss his attack');    
+
+            }
+
+            
+
+        },
+
+        give_up: function(){
+
+
+            this.playerHealth=100;
+            this.monsterHealth=100;
+            this.messages=[];
+            this.messages=[];
+            this.playerWin=false;
+            this.startGame=false;
+
+
+
+        },
+
+        start_new_game: function(){
+
+
+            this.playerHealth=100;
+            this.monsterHealth=100;
+            this.messages=[];
+            this.playerWin=false;
+            this.startGame=true;
+
+
+
+        }
+
+
+    }
+  
+});
+</script>
+
+</html>
