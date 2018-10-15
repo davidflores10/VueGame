@@ -125,7 +125,7 @@ new Vue({
                 this.messages.unshift({
                     isPlayer: true,
                     text:'PLAYER hits the MONSTER'});
-                    monsterHealth= this.monsterHealth-7;
+                this.monsterHealth= this.monsterHealth-7;
                 this.monsterAttack();    
             }
             
@@ -139,7 +139,6 @@ new Vue({
                 this.messages.unshift({
                     isPlayer: true,
                     text:'PLAYER makes special attack to the MONSTER!'});
-                    monsterHealth= this.monsterHe
                 this.monsterHealth= this.monsterHealth-11;
                 this.monsterAttack();
             }
