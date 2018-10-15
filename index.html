@@ -196,7 +196,10 @@ new Vue({
 
             }else{
                 this.playerTurn=false;
-                this.messages.unshift('The MONSTER miss his attack');    
+                this.messages.unshift({
+                    isPlayer: false,
+                    text:'The MONSTER miss his attack'
+                });    
 
             }
 
